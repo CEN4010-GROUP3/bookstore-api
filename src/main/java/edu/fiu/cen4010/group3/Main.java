@@ -10,6 +10,10 @@ public class Main {
         Javalin app = Javalin.create();
 
         app.get("/books", ctx -> BookView.displayBooks(ctx));
+
+        //route to display the top 10 selling books
+        app.get("/books/top-sellers", ctx -> BookView.getTopSellingBooks(ctx));
+
         app.get("/books/{isbn}", ctx -> BookView.getBookByIsbn(ctx));
         app.post("/books", ctx -> BookView.createBook(ctx));
         app.put("/books/{isbn}", ctx -> BookView.updateBook(ctx));
@@ -17,9 +21,6 @@ public class Main {
 
         //route to Book genre view feature
         app.get("/books/genre/{genre}", ctx -> BookView.getBooksByGenre(ctx));
-
-        //route to display the top 10 selling books
-        app.get("/books/top-sellers", ctx -> BookView.getTopSellingBooks(ctx));
 
         app.start(7071);
 
