@@ -9,10 +9,12 @@ import org.postgresql.util.PSQLException;
 import edu.fiu.cen4010.group3.model.Book;
 import edu.fiu.cen4010.group3.utils.DBUtils;
 
-import java.sql.Connection;
+import java.sql.Connection; 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.sql.ResultSet;
+
+import java.sql.SQLException;
 
 public class BookDao {
 
@@ -143,4 +145,92 @@ public class BookDao {
         }
     }
 
+    
+    /**
+     * Retrieves a list of books from the database that match a specific genre.
+     * This method establishes a connection to the database, prepares a SQL query
+     * to select books based on the provided genre, executes the query, and then
+     * processes the result set to create a list of {@link Book} objects.
+     *
+     * @param genre The genre of books to retrieve. This is used to filter books
+     *              in the SQL query.
+     * @return A list of {@link Book} objects that match the specified genre. If no
+     *         books are found or in case of an error, this method returns an empty list.
+     *         Note that this method suppresses any SQL or connection-related exceptions
+     *         and prints an error message to the standard error stream instead of
+     *         propagating exceptions further up the call stack.
+     */
+    public List<Book> getBooksByGenre(String genre) {
+        List<Book> books = new ArrayList<>();
+
+        Connection c = null;
+        PreparedStatement stmt = null;
+        try {
+            c = DBUtils.Connect();
+            String sql = "SELECT isbn, name, description, author, genre, publisher, year_published, price, copies_sold FROM books WHERE genre = ?";
+            stmt = c.prepareStatement(sql);
+            stmt.setString(1, genre);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                Book b = new Book(rs.getString("isbn"), rs.getString("name"), rs.getString("description"),
+                        rs.getString("author"), rs.getString("genre"), rs.getString("publisher"),
+                        rs.getInt("year_published"), rs.getDouble("price"), rs.getInt("copies_sold"));
+                books.add(b);
+            }
+            rs.close();
+        } catch (Exception e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+        } finally {
+            try {
+                if (stmt != null) stmt.close();
+                if (c != null) c.close();
+            } catch (SQLException e) {
+                System.err.println(e.getClass().getName() + ": " + e.getMessage());
+            }
+        }
+
+        return books;
+    }
+
+
+    /**
+     * Retrieves the top 10 selling books from the database.
+     * This method queries the database for books ordered by the number of copies sold in descending order,
+     * limiting the results to the top 10. It constructs a list of {@link Book} objects representing these top-selling books.
+     *
+     * @return A List of {@link Book} objects representing the top 10 selling books. If there are no sales or an error occurs,
+     *         an empty list is returned.
+     */
+    public List<Book> getTopSellingBooks() {
+        List<Book> topSellingBooks = new ArrayList<>();
+
+        Connection c = null;
+        PreparedStatement stmt = null;
+        try {
+            c = DBUtils.Connect();
+            String sql = "SELECT isbn, name, description, author, genre, publisher, year_published, price, copies_sold FROM books ORDER BY copies_sold DESC LIMIT 10";
+            stmt = c.prepareStatement(sql);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                Book b = new Book(rs.getString("isbn"), rs.getString("name"), rs.getString("description"),
+                        rs.getString("author"), rs.getString("genre"), rs.getString("publisher"),
+                        rs.getInt("year_published"), rs.getDouble("price"), rs.getInt("copies_sold"));
+                topSellingBooks.add(b);
+            }
+            rs.close();
+        } catch (Exception e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+        } finally {
+            try {
+                if (stmt != null) stmt.close();
+                if (c != null) c.close();
+            } catch (SQLException e) {
+                System.err.println(e.getClass().getName() + ": " + e.getMessage());
+            }
+        }
+
+        return topSellingBooks;
+    }
 }

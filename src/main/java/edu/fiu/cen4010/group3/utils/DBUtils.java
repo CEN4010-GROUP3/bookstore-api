@@ -12,7 +12,7 @@ public class DBUtils {
          Class.forName("org.postgresql.Driver");
          c = DriverManager
             .getConnection("jdbc:postgresql://localhost:5432/bookstoredb",
-            "postgres", "postgres");
+            "postgres", "6369");
       } catch (SQLException e) {
          e.printStackTrace();
          System.err.println(e.getClass().getName()+": "+e.getMessage());
