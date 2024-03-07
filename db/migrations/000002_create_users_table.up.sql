@@ -1,4 +1,4 @@
 CREATE TABLE users (
-    id int,
+    id SERIAL,
     PRIMARY KEY (id)
 )
