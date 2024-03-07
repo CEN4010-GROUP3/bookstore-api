@@ -16,6 +16,7 @@ public class Wishlist {
         this.name = name;
         this.userId = userId;
         this.wishlistId = wishlistId;
+        this.contents = new ArrayList<Book>();
     }
 
     // Getters
