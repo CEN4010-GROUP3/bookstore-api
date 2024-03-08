@@ -13,7 +13,7 @@ public class WishlistView {
         ctx.json(wishlistDao.getWishlists(
                 Integer.parseInt(
                         ctx.pathParam("userid")
-                );
+                )));
         ctx.status(HttpStatus.OK);
     }
 /*
