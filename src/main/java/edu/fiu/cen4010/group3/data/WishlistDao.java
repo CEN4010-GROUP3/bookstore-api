@@ -13,18 +13,17 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-
-
 /*
 DONE:
 Create wishlist
 Only three wishlist per user
 Get user wishlists
-TODO:
 Get list of books in user Id
+TODO:
 Add book to wishlist
 Remove book from wishlist (and add to cart)
  */
+
 public class WishlistDao {
 
     // Creates a blank wishlist under a userId in the database.
@@ -106,56 +105,35 @@ public class WishlistDao {
 
         return new ArrayList<>(wishlists.values());
     }
-/*
-    public Book findByIsbn(String isbn) {
-        Book b = null;
-        Connection c = null;
-        PreparedStatement stmt = null;
 
+    // Get a list of books in a wishlist
+    public ArrayList<Book> getWishlistContents(int userId) {
+
+        HashMap<String, Book> books = new HashMap<>();
+
+        Connection c = null;
+        Statement stmt = null;
         try {
             c = DBUtils.Connect();
-            stmt = c.prepareStatement(
-                    "SELECT isbn, name, description, author, genre, publisher, year_published, price, copies_sold FROM books WHERE isbn = ?");
-            stmt.setString(1, isbn);
-            ResultSet rs = stmt.executeQuery();
-
+            stmt = c.createStatement();
+            // Query statement is modified, but other than that, this is basically getBooks
+            ResultSet rs = stmt.executeQuery(
+                    "SELECT isbn, name, description, author, genre, publisher, year_published, price, copies_sold " +
+                            "FROM books JOIN wishlist_contents ON books.isbn = wishlist_contents.book_isbn WHERE wishlist_id = ?");
             while (rs.next()) {
-                b = new Book(rs.getString("isbn"), rs.getString("name"), rs.getString("description"), rs.getString("author"),
-                        rs.getString("genre"), rs.getString("publisher"), rs.getInt("year_published"), rs.getDouble("price"),
-                        rs.getInt("copies_sold"));
+                Book b = new Book(rs.getString("isbn"), rs.getString("name"), rs.getString("description"),
+                        rs.getString("author"), rs.getString("genre"), rs.getString("publisher"),
+                        rs.getInt("year_published"), rs.getDouble("price"), rs.getInt("copies_sold"));
+                books.put(b.getIsbn(), b);
             }
             rs.close();
             stmt.close();
             c.close();
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
+            System.exit(0);
         }
 
-        return b;
+        return new ArrayList<>(books.values());
     }
-
-    public void update(String isbn, String name, String description, String author, String genre, String publisher,
-            int yearPublished, double price) {
-        Connection c = null;
-        PreparedStatement stmt = null;
-        try {
-            c = DBUtils.Connect();
-            stmt = c.prepareStatement(
-                    "UPDATE books SET name = ?, description = ?, author = ?, genre = ?, publisher = ?, year_published = ?, price = ? WHERE isbn = ?");
-            stmt.setString(1, name);
-            stmt.setString(2, description);
-            stmt.setString(3, author);
-            stmt.setString(4, genre);
-            stmt.setString(5, publisher);
-            stmt.setInt(6, yearPublished);
-            stmt.setDouble(7, price);
-            stmt.setString(8, isbn);
-            stmt.executeUpdate();
-            stmt.close();
-            c.close();
-        } catch (Exception e) {
-            System.err.println(e.getClass().getName() + ": " + e.getMessage());
-        }
-    }
-*/
 }
