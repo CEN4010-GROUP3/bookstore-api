@@ -16,7 +16,8 @@ public class Main {
         app.put("/books/{isbn}", ctx -> BookView.updateBook(ctx));
         app.delete("/books/{isbn}", ctx -> BookView.deleteBook(ctx));
 
-        app.post("/{userid}/wishlist", ctx -> WishlistView.getWishlists(ctx));
+        app.post("/user/{userid}/wishlist", ctx -> WishlistView.getUserWishlists(ctx));
+        app.get("/wishlist/{id}", ctx -> WishlistView.getWishlistById(ctx));
 
         app.start(7070);
 

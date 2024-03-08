@@ -80,7 +80,7 @@ public class WishlistDao {
     }
 
     // Get all of the wishlists under a userID
-    public ArrayList<Wishlist> getWishlists(int userId) {
+    public ArrayList<Wishlist> getUserWishlists(int userId) {
 
         HashMap<Integer, Wishlist> wishlists = new HashMap<>();
 
@@ -107,19 +107,20 @@ public class WishlistDao {
     }
 
     // Get a list of books in a wishlist
-    public ArrayList<Book> getWishlistContents(int userId) {
+    public Wishlist getWishlistById(int wishlistId) {
 
         HashMap<String, Book> books = new HashMap<>();
 
         Connection c = null;
-        Statement stmt = null;
+        PreparedStatement stmt = null;
+        Wishlist wishlist = null;
         try {
             c = DBUtils.Connect();
-            stmt = c.createStatement();
+            stmt = c.prepareStatement("SELECT isbn, name, description, author, genre, publisher, year_published, price, copies_sold " +
+                    "FROM books JOIN wishlist_contents ON books.isbn = wishlist_contents.book_isbn WHERE wishlist_id = ?");
+            stmt.setInt(1, wishlistId);
             // Query statement is modified, but other than that, this is basically getBooks
-            ResultSet rs = stmt.executeQuery(
-                    "SELECT isbn, name, description, author, genre, publisher, year_published, price, copies_sold " +
-                            "FROM books JOIN wishlist_contents ON books.isbn = wishlist_contents.book_isbn WHERE wishlist_id = ?");
+            ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 Book b = new Book(rs.getString("isbn"), rs.getString("name"), rs.getString("description"),
                         rs.getString("author"), rs.getString("genre"), rs.getString("publisher"),
@@ -133,7 +134,26 @@ public class WishlistDao {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
             System.exit(0);
         }
-
-        return new ArrayList<>(books.values());
+        try {
+            c = DBUtils.Connect();
+            stmt = c.prepareStatement("SELECT name, user_id FROM wishlist WHERE id = ?");
+            stmt.setInt(1, wishlistId);
+            // Query statement is modified, but other than that, this is basically getBooks
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                wishlist = new Wishlist(rs.getString("name"), rs.getInt("user_id"), wishlistId);
+                wishlist.setContents(new ArrayList<>(books.values()));
+            }
+            rs.close();
+            stmt.close();
+            c.close();
+        } catch (Exception e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+            System.exit(0);
+        }
+        return wishlist;
     }
+
+
+
 }
