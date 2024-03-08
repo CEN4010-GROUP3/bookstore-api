@@ -1,6 +1,7 @@
 package edu.fiu.cen4010.group3;
 
 import edu.fiu.cen4010.group3.view.BookView;
+import edu.fiu.cen4010.group3.view.WishlistView;
 import io.javalin.Javalin;
 
 public class Main {
@@ -14,6 +15,8 @@ public class Main {
         app.post("/books", ctx -> BookView.createBook(ctx));
         app.put("/books/{isbn}", ctx -> BookView.updateBook(ctx));
         app.delete("/books/{isbn}", ctx -> BookView.deleteBook(ctx));
+
+        app.post("/{userid}/wishlist", ctx -> WishlistView.getWishlists(ctx));
 
         app.start(7070);
 
