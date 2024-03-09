@@ -85,12 +85,12 @@ public class WishlistDao {
         HashMap<Integer, Wishlist> wishlists = new HashMap<>();
 
         Connection c = null;
-        Statement stmt = null;
+        PreparedStatement stmt = null;
         try {
             c = DBUtils.Connect();
-            stmt = c.createStatement();
-            ResultSet rs = stmt.executeQuery(
-                    "SELECT name, id FROM wishlist WHERE user_id = ?");
+            stmt = c.prepareStatement("SELECT name, id FROM wishlist WHERE user_id = ?");
+            stmt.setInt(1, userId);
+            ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 Wishlist wishlist = new Wishlist(rs.getString("name"), userId, rs.getInt("id"));
                 wishlists.put(wishlist.getWishlistId(), wishlist);
