@@ -57,18 +57,20 @@ public class WishlistDao {
                     "SELECT COUNT(*) FROM wishlist WHERE user_id = ?");
             stmt.setInt(1, userId);
             ResultSet resultSet = stmt.executeQuery();
-            stmt.close();
-            c.close();
 
             if (resultSet.next()) {
                 wishlistAmount = resultSet.getInt(1);
             }
+
+            stmt.close();
+            c.close();
         } catch (PSQLException s) {
             System.err.println(s.getClass().getName() + ": " + s.getMessage());
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
         }
         // Return true if less than three wishlists.
+        // System.out.println("UserId " + userId + " has " + wishlistAmount + " therefore, creation: " + (wishlistAmount < 3));
         return (wishlistAmount < 3);
     }
 
