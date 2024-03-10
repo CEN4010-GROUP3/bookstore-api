@@ -10,7 +10,6 @@ import io.javalin.http.HttpStatus;
 public class WishlistView {
 
     public static void createWishlist(Context ctx) {
-
         Wishlist newWishlist = ctx.bodyAsClass(Wishlist.class);
 
         WishlistDao wishlistDao = new WishlistDao();
@@ -46,28 +45,4 @@ public class WishlistView {
             ctx.status(HttpStatus.NOT_FOUND);
         }
     }
-
-/*
-
-    public static void updateBook(Context ctx) {
-        Book user = ctx.bodyAsClass(Book.class);
-        BookDao bookDao = new BookDao();
-        try {
-            bookDao.update(user.getIsbn(), user.getName(), user.getDescription(), user.getAuthor(), user.getGenre(),
-                    user.getPublisher(), user.getYearPublished(), user.getPrice());
-        } catch (IllegalArgumentException e) {
-            ctx.status(HttpStatus.BAD_REQUEST);
-            ctx.result(e.getMessage());
-            return;
-        }
-        ctx.status(HttpStatus.NO_CONTENT);
-    }
-
-    public static void deleteBook(Context ctx) {
-        BookDao bookDao = new BookDao();
-
-        bookDao.delete(ctx.pathParam("isbn"));
-        ctx.status(HttpStatus.NO_CONTENT);
-    }
- */
 }
