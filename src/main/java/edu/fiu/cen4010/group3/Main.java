@@ -14,6 +14,9 @@ public class Main {
         //route to display the top 10 selling books
         app.get("/books/top-sellers", ctx -> BookView.getTopSellingBooks(ctx));
 
+        // Route to retrieve books by rating
+        app.get("/books/rating/{rating}", ctx -> BookView.getBooksByRating(ctx));
+
         app.get("/books/{isbn}", ctx -> BookView.getBookByIsbn(ctx));
         app.post("/books", ctx -> BookView.createBook(ctx));
         app.put("/books/{isbn}", ctx -> BookView.updateBook(ctx));
@@ -21,6 +24,7 @@ public class Main {
 
         //route to Book genre view feature
         app.get("/books/genre/{genre}", ctx -> BookView.getBooksByGenre(ctx));
+
 
         app.start(7071);
 

@@ -110,4 +110,27 @@ public class BookView {
             ctx.status(HttpStatus.INTERNAL_SERVER_ERROR).result("An error occurred: " + e.getMessage());
         }
     }
+
+
+/**
+ * Handles an HTTP GET request to retrieve books with a rating equal to or higher than a specified value. This method parses the rating value from the request's path parameter. If the rating parameter is not a valid double or if it's missing, the method responds with a BAD REQUEST status and an error message. Otherwise, it queries the database for books that meet the rating criteria using a {@link BookDao} instance and sends the list of books as a JSON response with an OK status.
+ * 
+ * @param ctx The {@link Context} object provided by Javalin, representing the current HTTP request and response context. It is used to access path parameters, modify the response status, and send the response body.
+ * @throws NumberFormatException if the rating path parameter cannot be parsed into a double. This exception is caught internally, and an appropriate error response is set.
+ */
+
+public static void getBooksByRating(Context ctx) {
+    double rating;
+    try {
+        rating = Double.parseDouble(ctx.pathParam("rating"));
+    } catch (NumberFormatException e) {
+        ctx.status(HttpStatus.BAD_REQUEST).result("Invalid rating format");
+        return;
+    }
+
+    BookDao bookDao = new BookDao();
+    List<Book> books = bookDao.getBooksByRating(rating);
+    ctx.json(books).status(HttpStatus.OK);
+}
+
 }

@@ -233,4 +233,54 @@ public class BookDao {
 
         return topSellingBooks;
     }
+    
+/**
+ * Retrieves a list of books from the database that have a rating equal to or higher than the specified minimum rating. 
+ * This method establishes a connection to the database, prepares a SQL query to select books based on the rating criterion, 
+ * executes the query, and processes the result set to create a list of {@link Book} objects.
+ *
+ * @param rating The minimum rating threshold for books to be retrieved. This value is used to filter books in the SQL query.
+ * @return A list of {@link Book} objects that match the rating criteria. Each {@link Book} object includes details such as 
+ * ISBN, name, description, author, genre, publisher, year published, price, and copies sold. If no books meet the rating criteria 
+ * or in case of an error, this method returns an empty list.
+ * @throws SQLException if a database access error occurs or this method is called on a closed connection.
+ * @throws Exception if an error occurs during the execution of the SQL query or processing the result set.
+ */
+public List<Book> getBooksByRating(double rating) {
+    List<Book> books = new ArrayList<>();
+    Connection c = null;
+    PreparedStatement stmt = null;
+    try {
+        c = DBUtils.Connect();
+        // Corrected SQL query to filter by rating instead of price
+        String sql = "SELECT isbn, name, description, author, genre, publisher, year_published, price, copies_sold, rating FROM books WHERE rating >= ?";
+        stmt = c.prepareStatement(sql);
+        stmt.setDouble(1, rating);
+        ResultSet rs = stmt.executeQuery();
+
+        while (rs.next()) {
+            // Assuming a constructor that includes rating or setRating method is available
+            Book b = new Book(rs.getString("isbn"), rs.getString("name"), rs.getString("description"),
+                    rs.getString("author"), rs.getString("genre"), rs.getString("publisher"),
+                    rs.getInt("year_published"), rs.getDouble("price"), rs.getInt("copies_sold"));
+            // Uncomment the following line if the Book model includes a rating field
+            // b.setRating(rs.getDouble("rating"));
+            books.add(b);
+        }
+        rs.close();
+    } catch (Exception e) {
+        System.err.println(e.getClass().getName() + ": " + e.getMessage());
+    } finally {
+        try {
+            if (stmt != null) stmt.close();
+            if (c != null) c.close();
+        } catch (SQLException e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+        }
+    }
+
+    return books;
+}
+
+
 }
