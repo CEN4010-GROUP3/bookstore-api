@@ -57,5 +57,11 @@ public class WishlistView {
         }
         ctx.status(HttpStatus.CREATED);
     }
+
+    public static void deleteFromWishlist(Context ctx) {
+        WishlistDao wishlistDao = new WishlistDao();
+        wishlistDao.deleteFromWishlist(ctx.pathParam("isbn"), Integer.parseInt(ctx.pathParam("id")));
+        ctx.status(HttpStatus.NO_CONTENT);
+    }
 }
 

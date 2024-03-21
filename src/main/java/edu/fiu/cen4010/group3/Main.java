@@ -20,6 +20,7 @@ public class Main {
         app.get("/user/{userid}/wishlist", ctx -> WishlistView.getUserWishlists(ctx));
         app.get("/wishlist/{id}", ctx -> WishlistView.getWishlistById(ctx));
         app.post("/wishlist/{id}/{isbn}", ctx -> WishlistView.addToWishlist(ctx));
+        app.delete("wishlist/{id}/{isbn}", ctx -> WishlistView.deleteFromWishlist(ctx));
         app.start(7070);
 
     }
