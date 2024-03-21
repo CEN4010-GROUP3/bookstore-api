@@ -156,6 +156,22 @@ public class WishlistDao {
         return wishlist;
     }
 
-
-
+    public void addToWishlist(String isbn, int wishlistId) {
+        Connection c = null;
+        PreparedStatement stmt = null;
+        try {
+            c = DBUtils.Connect();
+            stmt = c.prepareStatement(
+                    "INSERT INTO wishlist_contents (book_isbn, wishlist_id) VALUES (?, ?)");
+            stmt.setString(1, isbn);
+            stmt.setInt(2, wishlistId);
+            stmt.executeUpdate();
+            stmt.close();
+            c.close();
+        } catch (PSQLException s) {
+            System.err.println(s.getClass().getName() + ": " + s.getMessage());
+        } catch (Exception e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+        }
+    }
 }
