@@ -174,4 +174,20 @@ public class WishlistDao {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
         }
     }
+
+    public void deleteFromWishlist(String isbn, int wishlistId) {
+        Connection c = null;
+        PreparedStatement stmt = null;
+        try {
+            c = DBUtils.Connect();
+            stmt = c.prepareStatement("DELETE FROM wishlist_contents WHERE book_isbn = ? AND wishlist_id = ?");
+            stmt.setString(1, isbn);
+            stmt.setInt(2, wishlistId);
+            stmt.executeUpdate();
+            stmt.close();
+            c.close();
+        } catch (Exception e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+        }
+    }
 }
