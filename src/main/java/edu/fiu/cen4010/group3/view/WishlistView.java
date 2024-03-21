@@ -45,4 +45,16 @@ public class WishlistView {
             ctx.status(HttpStatus.NOT_FOUND);
         }
     }
-}
+
+    public static void addToWishlist(Context ctx) {
+        WishlistDao wishlistDao = new WishlistDao();
+        try {
+            wishlistDao.addToWishlist(ctx.pathParam("isbn"), Integer.parseInt(ctx.pathParam("id")));
+        } catch (IllegalArgumentException e) {
+            ctx.status(HttpStatus.BAD_REQUEST);
+            ctx.result(e.getMessage());
+            return;
+        }
+        ctx.status(HttpStatus.CREATED);
+    }
+
