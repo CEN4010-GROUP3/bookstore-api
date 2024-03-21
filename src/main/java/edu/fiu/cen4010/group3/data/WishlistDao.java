@@ -27,7 +27,7 @@ Remove book from wishlist (and add to cart)
 public class WishlistDao {
 
     // Creates a blank wishlist under a userId in the database.
-    public void unchecked_create(String name, int userId) {
+    private void unchecked_create(String name, int userId) {
         Connection c = null;
         PreparedStatement stmt = null;
         try {
@@ -47,7 +47,7 @@ public class WishlistDao {
     }
 
     // Check if the user already has three wishlists.
-    public boolean check(int userId) {
+    private boolean check(int userId) {
         int wishlistAmount = 0;
         Connection c = null;
         PreparedStatement stmt = null;
