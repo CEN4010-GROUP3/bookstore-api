@@ -19,7 +19,7 @@ public class Main {
         app.post("/wishlist/create", ctx -> WishlistView.createWishlist(ctx));
         app.get("/user/{userid}/wishlist", ctx -> WishlistView.getUserWishlists(ctx));
         app.get("/wishlist/{id}", ctx -> WishlistView.getWishlistById(ctx));
-        app.post("/wishlist/{id}/add/{isbn}", ctx -> WishlistView.addToWishlist(ctx);
+        app.post("/wishlist/{id}/add/{isbn}", ctx -> WishlistView.addToWishlist(ctx));
         app.start(7070);
 
     }

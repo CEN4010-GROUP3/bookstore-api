@@ -37,7 +37,7 @@ public class WishlistView {
         Wishlist w = wishlistDao.getWishlistById(
                 Integer.parseInt(
                         ctx.pathParam("id")
-        ));
+                ));
         if (w != null) {
             ctx.json(w);
             ctx.status(HttpStatus.OK);
@@ -57,4 +57,5 @@ public class WishlistView {
         }
         ctx.status(HttpStatus.CREATED);
     }
+}
 
