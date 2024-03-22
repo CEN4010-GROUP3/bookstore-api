@@ -85,11 +85,17 @@ public class BookDao {
             stmt = c.prepareStatement("DELETE FROM books WHERE isbn = ?");
             stmt.setString(1, isbn);
             stmt.executeUpdate();
+
+            if (stmt.getUpdateCount() > 0)
+                System.out.println(" - SUCCESS");
+            else
+                System.out.println(" - NOT FOUND");
+
             stmt.close();
             c.close();
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
-        }
+        }  
     }
 
     public Book findByIsbn(String isbn) {
