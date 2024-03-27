@@ -149,4 +149,33 @@ public class BookDao {
         }
     }
 
+    public List<Book> findByAuthor(String author) {
+        HashMap<String, Book> books = new HashMap<>();
+
+        Connection c = null;
+        PreparedStatement stmt = null;
+        try {
+            c = DBUtils.Connect();
+            stmt = c.prepareStatement(
+                    "SELECT isbn, name, description, author, genre, publisher, year_published, price, copies_sold FROM books WHERE upper(author) = upper(?)");
+            stmt.setString(1, author);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                Book b = new Book(rs.getString("isbn"), rs.getString("name"), rs.getString("description"),
+                        rs.getString("author"), rs.getString("genre"), rs.getString("publisher"),
+                        rs.getInt("year_published"), rs.getDouble("price"), rs.getInt("copies_sold"));
+                books.put(b.getIsbn(), b);
+            }
+            rs.close();
+            stmt.close();
+            c.close();
+        } catch (Exception e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+            System.exit(0);
+        }
+
+        return new ArrayList<>(books.values());
+    }
+
 }

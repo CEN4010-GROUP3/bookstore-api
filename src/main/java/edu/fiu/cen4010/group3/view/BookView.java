@@ -68,4 +68,11 @@ public class BookView {
         bookDao.delete(ctx.pathParam("isbn"));
         ctx.status(HttpStatus.NO_CONTENT);
     }
+
+    public static void getBooksByAuthor(Context ctx) {
+        System.out.println("[VIEW] Getting books by author: " + ctx.pathParam("author"));
+        BookDao bookDao = new BookDao();
+        ctx.json(bookDao.findByAuthor(ctx.pathParam("author")));
+        ctx.status(HttpStatus.OK);
+    }
 }
