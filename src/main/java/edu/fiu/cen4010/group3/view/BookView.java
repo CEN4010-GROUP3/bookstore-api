@@ -1,5 +1,7 @@
 package edu.fiu.cen4010.group3.view;
 
+import java.util.List;
+
 import edu.fiu.cen4010.group3.data.BookDao;
 import edu.fiu.cen4010.group3.model.Book;
 import io.javalin.http.Context;
@@ -70,9 +72,18 @@ public class BookView {
     }
 
     public static void getBooksByAuthor(Context ctx) {
-        System.out.println("[VIEW] Getting books by author: " + ctx.pathParam("author"));
+        String firstName = ctx.queryParam("firstName");
+        String lastName = ctx.queryParam("lastName");
+        String author = firstName + " " + lastName;
+        System.out.println("[VIEW] Getting books by author: " +  author);
         BookDao bookDao = new BookDao();
-        ctx.json(bookDao.findByAuthor(ctx.pathParam("author")));
+        List<Book> books = bookDao.findByAuthor(author);
+
+        if (books.isEmpty()) {
+            ctx.status(HttpStatus.NOT_FOUND);
+            return;
+        }
+        ctx.json(books);
         ctx.status(HttpStatus.OK);
     }
 }

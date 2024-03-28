@@ -12,7 +12,7 @@ public class Main {
 
         app.get("/books", ctx -> BookView.displayBooks(ctx));
         app.get("/books/{isbn}", ctx -> BookView.getBookByIsbn(ctx));
-        app.get("/authors/books/{author}", ctx -> BookView.getBooksByAuthor(ctx));
+        app.get("/authors/books", ctx -> BookView.getBooksByAuthor(ctx));
         app.post("/books", ctx -> BookView.createBook(ctx));
         app.put("/books/{isbn}", ctx -> BookView.updateBook(ctx));
         app.delete("/books/{isbn}", ctx -> BookView.deleteBook(ctx));
