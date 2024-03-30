@@ -2,6 +2,7 @@ package edu.fiu.cen4010.group3;
 
 import edu.fiu.cen4010.group3.view.BookView;
 import edu.fiu.cen4010.group3.view.AuthorView;
+import edu.fiu.cen4010.group3.view.CommentView;
 import edu.fiu.cen4010.group3.view.RatingView;
 import io.javalin.Javalin;
 
@@ -37,6 +38,11 @@ public class Main {
         RatingView ratingView = new RatingView();
         app.post("book/create/rating", ctx -> ratingView.postRating(ctx));
         app.get("book/ratings/{bookID}", ctx -> ratingView.getAVGRating(ctx));
+
+        //route to post comments and get a list of comments
+        CommentView commentview =  new CommentView();
+        app.post("book/create/comments", ctx -> commentview.postComments(ctx));
+        app.get("book/comments/{bookID}", ctx -> commentview.getAllComment(ctx));
 
         app.start(7070);
 
