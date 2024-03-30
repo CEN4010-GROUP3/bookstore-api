@@ -2,6 +2,7 @@ package edu.fiu.cen4010.group3;
 
 import edu.fiu.cen4010.group3.view.BookView;
 import edu.fiu.cen4010.group3.view.AuthorView;
+import edu.fiu.cen4010.group3.view.RatingView;
 import io.javalin.Javalin;
 
 public class Main {
@@ -31,6 +32,11 @@ public class Main {
         app.post("/authors", ctx -> AuthorView.createAuthor(ctx));
         app.put("/authors", ctx -> AuthorView.updateAuthor(ctx));
         app.delete("/authors", ctx -> AuthorView.deleteAuthor(ctx));
+
+        //route to post rating and get average rating
+        RatingView ratingView = new RatingView();
+        app.post("book/create/rating", ctx -> ratingView.postRating(ctx));
+        app.get("book/ratings/{bookID}", ctx -> ratingView.getAVGRating(ctx));
 
         app.start(7070);
 
