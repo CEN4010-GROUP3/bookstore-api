@@ -13,17 +13,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-/*
-DONE:
-Create wishlist
-Only three wishlist per user
-Get user wishlists
-Get list of books in user Id
-TODO:
-Add book to wishlist
-Remove book from wishlist (and add to cart)
- */
-
 public class WishlistDao {
 
     // Creates a blank wishlist under a userId in the database.
