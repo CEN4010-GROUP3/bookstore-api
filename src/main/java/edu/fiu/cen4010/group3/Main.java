@@ -4,6 +4,7 @@ import edu.fiu.cen4010.group3.view.BookView;
 import edu.fiu.cen4010.group3.view.AuthorView;
 import edu.fiu.cen4010.group3.view.CommentView;
 import edu.fiu.cen4010.group3.view.RatingView;
+import edu.fiu.cen4010.group3.view.WishlistView;
 import io.javalin.Javalin;
 
 public class Main {
@@ -44,6 +45,12 @@ public class Main {
         app.post("book/create/comments", ctx -> commentview.postComments(ctx));
         app.get("book/comments/{bookID}", ctx -> commentview.getAllComment(ctx));
 
+        // Wishlist-related requests
+        app.post("/wishlist/create", ctx -> WishlistView.createWishlist(ctx));
+        app.get("/user/{userid}/wishlist", ctx -> WishlistView.getUserWishlists(ctx));
+        app.get("/wishlist/{id}", ctx -> WishlistView.getWishlistById(ctx));
+        app.post("/wishlist/{id}/{isbn}", ctx -> WishlistView.addToWishlist(ctx));
+        app.delete("wishlist/{id}/{isbn}", ctx -> WishlistView.deleteFromWishlist(ctx));
         app.start(7070);
 
     }
