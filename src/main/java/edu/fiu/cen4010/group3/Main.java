@@ -18,6 +18,11 @@ public class Main {
         // Route to retrieve books by rating
         app.get("/books/rating/{rating}", ctx -> BookView.getBooksByRating(ctx));
 
+
+        // Route to handle discounting books by a publisher
+        app.patch("/books/discount", ctx -> BookView.discountBooksByPublisher(ctx));
+
+
         app.get("/books/{isbn}", ctx -> BookView.getBookByIsbn(ctx));
         app.get("/authors/books", ctx -> BookView.getBooksByAuthor(ctx));
         app.post("/books", ctx -> BookView.createBook(ctx));

@@ -317,5 +317,35 @@ public List<Book> getBooksByRating(double rating) {
     return books;
 }
 
+/**
+ * Applies a discount to all books from a specific publisher.
+ * This method updates the price of each book by reducing it based on the given discount percentage.
+ *
+ * @param publisher The publisher whose books will be discounted.
+ * @param discountPercent The percentage of discount to be applied to the book prices.
+ */
+public void discountBooksByPublisher(String publisher, double discountPercent) {
+    Connection c = null;
+    PreparedStatement stmt = null;
+    try {
+        c = DBUtils.Connect();
+        String sql = "UPDATE books SET price = price - (price * ? / 100) WHERE publisher = ?";
+        stmt = c.prepareStatement(sql);
+        stmt.setDouble(1, discountPercent);
+        stmt.setString(2, publisher);
+        int rowsUpdated = stmt.executeUpdate();
+        System.out.println(rowsUpdated + " rows updated.");
+    } catch (SQLException e) {
+        System.err.println(e.getClass().getName() + ": " + e.getMessage());
+    } finally {
+        try {
+            if (stmt != null) stmt.close();
+            if (c != null) c.close();
+        } catch (SQLException e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+        }
+    }
+}
+
 
 }
