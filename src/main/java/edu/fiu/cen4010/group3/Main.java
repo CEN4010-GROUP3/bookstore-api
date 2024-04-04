@@ -15,13 +15,11 @@ public class Main {
         //route to display the top 10 selling books
         app.get("/books/top-sellers", ctx -> BookView.getTopSellingBooks(ctx));
 
-        // Route to retrieve books by rating
+        // route to retrieve books by rating
         app.get("/books/rating/{rating}", ctx -> BookView.getBooksByRating(ctx));
 
-
-        // Route to handle discounting books by a publisher
+        // route to handle discounting books by a publisher
         app.patch("/books/discount", ctx -> BookView.discountBooksByPublisher(ctx));
-
 
         app.get("/books/{isbn}", ctx -> BookView.getBookByIsbn(ctx));
         app.get("/authors/books", ctx -> BookView.getBooksByAuthor(ctx));

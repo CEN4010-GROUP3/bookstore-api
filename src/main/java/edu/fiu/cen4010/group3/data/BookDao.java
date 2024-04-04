@@ -318,25 +318,27 @@ public List<Book> getBooksByRating(double rating) {
 }
 
 /**
- * Applies a discount to all books from a specific publisher.
- * This method updates the price of each book by reducing it based on the given discount percentage.
+ * Applies a discount to all books published by a specified publisher.
+ * The matching of the publisher name is case insensitive.
  *
- * @param publisher The publisher whose books will be discounted.
- * @param discountPercent The percentage of discount to be applied to the book prices.
+ * @param publisher The name of the publisher for which the discount will be applied.
+ * @param discountPercent The percentage of the discount to be applied to the book prices.
+ * @return The number of rows updated in the database, which represents the number of books that had their prices discounted.
+ * @throws SQLException if there is an error while executing the SQL update.
  */
-public void discountBooksByPublisher(String publisher, double discountPercent) {
+public int discountBooksByPublisher(String publisher, double discountPercent) {
     Connection c = null;
     PreparedStatement stmt = null;
     try {
         c = DBUtils.Connect();
-        String sql = "UPDATE books SET price = price - (price * ? / 100) WHERE publisher = ?";
+        String sql = "UPDATE books SET price = price - (price * ? / 100) WHERE UPPER(publisher) = UPPER(?)";
         stmt = c.prepareStatement(sql);
         stmt.setDouble(1, discountPercent);
         stmt.setString(2, publisher);
-        int rowsUpdated = stmt.executeUpdate();
-        System.out.println(rowsUpdated + " rows updated.");
+        return stmt.executeUpdate(); // Return the number of rows updated
     } catch (SQLException e) {
         System.err.println(e.getClass().getName() + ": " + e.getMessage());
+        return 0; // Return 0 if there's an exception
     } finally {
         try {
             if (stmt != null) stmt.close();
