@@ -55,54 +55,10 @@ public class Main {
         app.start(7070);
 
         // User Profile related requests
-        // Endpoint for creating a user profile
-        app.post("/user", ctx -> {
-            UserProfile userProfile = ctx.bodyAsClass(UserProfile.class);
-            userProfiles.put(userProfile.getUsername(), userProfile);
-            ctx.status(201).result("User profile created successfully");
-        });
-
-        // Endpoint for retrieving a user profile
-        app.get("/user/{username}", ctx -> {
-            String username = ctx.pathParam("username");
-            UserProfile userProfile = userProfiles.get(username);
-            if (userProfile != null) {
-                ctx.json(userProfile);
-            } else {
-                ctx.status(404).result("User profile not found");
-            }
-        });
-
-        // Endpoint for updating a user profile
-        app.put("/user/{username}", ctx -> {
-            String username = ctx.pathParam("username");
-            UserProfile userProfile = userProfiles.get(username);
-            if (userProfile != null) {
-                UserProfile updatedProfile = ctx.bodyAsClass(UserProfile.class);
-                userProfile.setName(updatedProfile.getName());
-                userProfile.setAddress(updatedProfile.getAddress());
-                userProfile.setEmail(updatedProfile.getEmail());
-                userProfile.setPassword(updatedProfile.getPassword());
-                ctx.status(204).result("User profile updated successfully");
-            } else {
-                ctx.status(404).result("User profile not found");
-            }
-        });
-
-        // Endpoint for updating a user's credit card information
-        app.post("/user/{username}/{credit-card}", ctx -> {
-            String username = ctx.pathParam("username");
-            UserProfile existingProfile = userProfiles.get(username);
-            if (existingProfile != null) {
-                // Extract credit card information from request body
-                CreditCard creditCard = ctx.bodyAsClass(CreditCard.class);
-                // Update credit card information in user's profile
-                existingProfile.setCreditCard(creditCard);
-                ctx.result("Credit card information updated successfully");
-            } else {
-                ctx.status(404).result("User profile not found");
-            }
-        });
+        app.post("/user", ctx -> UserProfileView.createUser(ctx));
+        app.get("/user/{username}", ctx -> UserProfileView.retrieveUser(ctx));
+        app.put("/user/{username}", ctx -> UserProfileView.updateUser(ctx));
+        app.post("/user/{username}/{credit-card}", ctx ->  UserProfileView.creditCard(ctx));
 
     }
 }
