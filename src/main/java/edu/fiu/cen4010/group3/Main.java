@@ -1,11 +1,6 @@
 package edu.fiu.cen4010.group3;
 
-import edu.fiu.cen4010.group3.view.BookView;
-import edu.fiu.cen4010.group3.view.AuthorView;
-import edu.fiu.cen4010.group3.view.CommentView;
-import edu.fiu.cen4010.group3.view.RatingView;
-import edu.fiu.cen4010.group3.view.WishlistView;
-import edu.fiu.cen4010.group3.view.UserProfile;
+import edu.fiu.cen4010.group3.view.*;
 import io.javalin.Javalin;
 
 public class Main {
