@@ -158,19 +158,25 @@ public static void getBooksByRating(Context ctx) {
 }
 
 /**
- * Handles the HTTP PATCH request to apply a discount to all books of a specific publisher.
- * The method expects the request to contain parameters for the publisher and the discount percentage.
- * It delegates the discount operation to the {@link BookDao} and responds with the appropriate HTTP status code.
+ * Handles the HTTP request to discount books by a specific publisher.
+ * Updates the price of all books from the given publisher by applying the specified discount percentage.
+ * The operation is case insensitive with respect to the publisher's name.
+ * Responds with 204 No Content if the update is successful, or 404 Not Found if no books are updated.
  *
- * @param ctx The Javalin context object for handling web requests and responses.
+ * @param ctx The context of the HTTP request and response.
  */
 public static void discountBooksByPublisher(Context ctx) {
     try {
         String publisher = ctx.formParam("publisher");
         double discountPercent = Double.parseDouble(ctx.formParam("discount"));
         BookDao bookDao = new BookDao();
-        bookDao.discountBooksByPublisher(publisher, discountPercent);
-        ctx.status(HttpStatus.NO_CONTENT);
+        int rowsUpdated = bookDao.discountBooksByPublisher(publisher, discountPercent);
+
+        if (rowsUpdated > 0) {
+            ctx.status(HttpStatus.NO_CONTENT);
+        } else {
+            ctx.status(HttpStatus.NOT_FOUND).result("No books updated, publisher not found or no applicable books.");
+        }
     } catch (NumberFormatException e) {
         ctx.status(HttpStatus.BAD_REQUEST).result("Invalid discount format");
     } catch (Exception e) {
