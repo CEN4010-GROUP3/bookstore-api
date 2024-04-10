@@ -30,8 +30,8 @@ public class BookView {
 
     public static void createBook(Context ctx) {
 
-        System.out.println("[VIEW] Creating book with isbn: " + ctx.pathParam("isbn"));
         Book book = ctx.bodyAsClass(Book.class);
+        System.out.println("[VIEW] Creating book with isbn: " + book.getIsbn());
 
         BookDao bookDao = new BookDao();
         try {
@@ -48,9 +48,10 @@ public class BookView {
     }
 
     public static void updateBook(Context ctx) {
-
-        System.out.println("[VIEW] Updating book with isbn: " + ctx.pathParam("isbn"));
+        
         Book book = ctx.bodyAsClass(Book.class);
+        System.out.println("[VIEW] Updating book with isbn: " + ctx.pathParam("isbn"));
+
         BookDao bookDao = new BookDao();
         try {
             bookDao.update(book.getIsbn(), book.getName(), book.getDescription(), book.getAuthor(), book.getGenre(),
@@ -64,8 +65,9 @@ public class BookView {
     }
 
     public static void deleteBook(Context ctx) {
-        System.out.print("[VIEW] Deleting book with isbn: " + ctx.pathParam("isbn"));
+        
         BookDao bookDao = new BookDao();
+        System.out.print("[VIEW] Deleting book with isbn: " + ctx.pathParam("isbn"));
         
         bookDao.delete(ctx.pathParam("isbn"));
         ctx.status(HttpStatus.NO_CONTENT);
